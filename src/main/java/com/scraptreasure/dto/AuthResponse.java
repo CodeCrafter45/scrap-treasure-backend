@@ -8,6 +8,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AuthResponse {
 
+    public AuthResponse(AuthResponse token2) {
+        //TODO Auto-generated constructor stub
+    }
     private String token;
     private String role;
 }

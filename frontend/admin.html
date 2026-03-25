@@ -1,0 +1,11 @@
+<h2>Admin Dashboard</h2>
+<button onclick="verifyCollectors()">verify Collectors</button>
+<button onclick="manageCategories()">verify Collectors</button>
+<button onclick="logout()">Logout</button>
+<script>
+    function logout(){
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        window.location.href= "login.html"
+    }
+</script>

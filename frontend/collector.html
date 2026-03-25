@@ -1,0 +1,22 @@
+<h2>Collector Dashboard</h2>
+
+<button onclick="logout()">Logout</button>
+
+<hr>
+
+<h3>Available Requests</h3>
+<div id="requestList"></div>
+
+<script src="js/api.js"></script>
+<script src="js/collector.js"></script>
+
+<script>
+function logout(){
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
+window.onload = function () {
+    loadAvailableRequests();
+};
+</script>
