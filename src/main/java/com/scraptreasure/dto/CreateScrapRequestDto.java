@@ -1,14 +1,13 @@
 package com.scraptreasure.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 public class CreateScrapRequestDto {
 
     private String address;
     private LocalDateTime preferredTime;
+    private Long categoryId;
+    // NO manual getCategoryId() method here
 }

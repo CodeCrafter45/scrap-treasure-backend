@@ -62,16 +62,18 @@ public class GlobalExceptionHandler {
     }
 
     // Fallback – any unexpected error
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleGeneralException(
-            Exception ex
-    ) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.builder()
-                        .success(false)
-                        .message("Something went wrong")
-                        .data(null)
-                        .time(LocalDateTime.now())
-                        .build());
-    }
+@ExceptionHandler(Exception.class)
+public ResponseEntity<ApiResponse<?>> handleGeneralException(
+        Exception ex
+) {
+    ex.printStackTrace(); // ADD THIS LINE temporarily
+
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ApiResponse.builder()
+                    .success(false)
+                    .message(ex.getMessage()) // CHANGE THIS to show real error
+                    .data(null)
+                    .time(LocalDateTime.now())
+                    .build());
+}
 }

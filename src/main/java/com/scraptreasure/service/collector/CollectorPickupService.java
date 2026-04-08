@@ -3,57 +3,49 @@ package com.scraptreasure.service.collector;
 import com.scraptreasure.dto.CollectScrapDto;
 import com.scraptreasure.entity.*;
 import com.scraptreasure.enums.RequestStatus;
-import com.scraptreasure.exception.BadRequestException;
-import com.scraptreasure.exception.ResourceNotFoundException;
+import com.scraptreasure.exception.*;
 import com.scraptreasure.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor    
 public class CollectorPickupService {
 
     private final ScrapRequestRepository scrapRequestRepository;
     private final ScrapCollectionDetailsRepository detailsRepository;
-    private final ScrapCategoryRepository categoryRepository;
 
-    public ScrapCollectionDetails collectScrap(
-            Long requestId,
-            CollectScrapDto dto
-    ) {
+    public ScrapCollectionDetails collectScrap(Long requestId, CollectScrapDto dto) {
 
         ScrapRequest request = scrapRequestRepository.findById(requestId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Request not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Request not found"));
 
         if (request.getStatus() != RequestStatus.ACCEPTED) {
-            throw new BadRequestException(
-                    "Request is not in ACCEPTED state");
+            throw new BadRequestException("Request is not in ACCEPTED state");
         }
 
-        ScrapCategory category = categoryRepository
-                .findById(dto.getScrapCategoryId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Scrap category not found"));
-
-        if (!category.isActive()) {
-            throw new BadRequestException(
-                    "Scrap category is inactive");
+        if (dto.getWeightKg() == null || dto.getWeightKg() <= 0) {
+            throw new BadRequestException("Invalid weight");
         }
 
-        double calculatedPrice =
-                dto.getWeightKg() * category.getPricePerKg();
+        // calculate price if category exists, otherwise default to 0
+        ScrapCategory category = request.getScrapCategory();
+        double price = (category != null)
+                ? dto.getWeightKg() * category.getPricePerKg()
+                : 0.0;  // ← no crash if category is null
 
+        request.setWeightKg(dto.getWeightKg());
+        request.setPrice(price);
         request.setStatus(RequestStatus.COLLECTED);
 
-        ScrapCollectionDetails details =
-                ScrapCollectionDetails.builder()
-                        .scrapRequest(request)
-                        .weightKg(dto.getWeightKg())
-                        .price(calculatedPrice)
-                        .build();
+        scrapRequestRepository.save(request);  // ← saves weight + price
 
-        scrapRequestRepository.save(request);
+        ScrapCollectionDetails details = ScrapCollectionDetails.builder()
+                .scrapRequest(request)
+                .weightKg(dto.getWeightKg())
+                .price(price)
+                .build();
+
         return detailsRepository.save(details);
     }
 }

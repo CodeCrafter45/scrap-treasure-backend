@@ -12,12 +12,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/scrap-categories")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 public class AdminScrapCategoryController {
 
     private final AdminScrapCategoryService service;
 
+    // 🔐 Only ADMIN can create
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<ScrapCategoryResponseDto> create(
             @RequestBody ScrapCategoryRequestDto dto) {
 
@@ -29,7 +30,9 @@ public class AdminScrapCategoryController {
                 .build();
     }
 
+    // 🔓 ADMIN + COLLECTOR can view
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('COLLECTOR')")
     public ApiResponse<List<ScrapCategoryResponseDto>> getAll() {
 
         return ApiResponse.<List<ScrapCategoryResponseDto>>builder()
@@ -40,7 +43,9 @@ public class AdminScrapCategoryController {
                 .build();
     }
 
+    // 🔐 Only ADMIN can toggle
     @PostMapping("/{id}/toggle")
+    @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> toggle(
             @PathVariable Long id,
             @RequestParam boolean active) {
@@ -55,4 +60,3 @@ public class AdminScrapCategoryController {
                 .build();
     }
 }
-

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Scrap Treasure</title>
+    <title>Join Scrap Treasure</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -13,7 +13,6 @@
             --secondary: #00cec9;
             --dark: #2d3436;
             --glass: rgba(255, 255, 255, 0.9);
-            --error-red: #ff7675;
         }
 
         body {
@@ -24,13 +23,12 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* Same Eco-Gradient as Register */
+            /* Vibrant Eco-Gradient Background */
             background: linear-gradient(135deg, #55efc4 0%, #81ecec 50%, #74b9ff 100%);
-            overflow: hidden;
-            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Decorative Background Circles */
+        /* Decorative Floating Circles for Visual Interest */
         body::before, body::after {
             content: "";
             position: absolute;
@@ -40,26 +38,12 @@
         body::before { width: 300px; height: 300px; background: rgba(255,255,255,0.2); top: -50px; left: -50px; }
         body::after { width: 200px; height: 200px; background: rgba(255,255,255,0.15); bottom: 20px; right: 20px; }
 
-        /* Floating Trash/Recycle Icons (Subtle) */
-        .bg-icons i {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.3);
-            z-index: -1;
-            animation: floatIcon 10s infinite linear;
-        }
-        @keyframes floatIcon {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.5; }
-            90% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
-
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             background: var(--glass);
             backdrop-filter: blur(10px);
-            padding: 50px 40px;
+            padding: 40px;
             border-radius: 24px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             text-align: center;
@@ -72,7 +56,7 @@
         }
 
         .logo {
-            font-size: 45px;
+            font-size: 40px;
             margin-bottom: 10px;
         }
 
@@ -80,18 +64,18 @@
             margin: 0;
             color: var(--dark);
             font-weight: 700;
-            font-size: 30px;
+            font-size: 28px;
         }
 
         p.subtitle {
             color: #636e72;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             font-size: 14px;
         }
 
         .input-wrapper {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .input-wrapper i {
@@ -103,7 +87,7 @@
             font-size: 18px;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 14px 15px 14px 45px;
             border: 2px solid transparent;
@@ -116,16 +100,17 @@
             outline: none;
         }
 
-        input:focus {
+        input:focus, select:focus {
             background: white;
             border-color: var(--primary);
             box-shadow: 0 0 10px rgba(0, 184, 148, 0.1);
         }
 
+        /* The "Shiny" Button */
         .btn-grad {
             width: 100%;
             padding: 16px;
-            margin-top: 15px;
+            margin-top: 10px;
             background: linear-gradient(to right, #00b894, #00cec9);
             color: white;
             border: none;
@@ -146,15 +131,6 @@
             box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
         }
 
-        /* Error Message Style */
-        #error {
-            color: var(--error-red);
-            font-size: 13px;
-            margin-top: 15px;
-            font-weight: 500;
-            min-height: 20px;
-        }
-
         .footer-text {
             margin-top: 25px;
             font-size: 14px;
@@ -171,41 +147,77 @@
 
 <body>
 
-    <div class="bg-icons">
-        <i class="fas fa-recycle" style="left: 10%; animation-delay: 0s;"></i>
-        <i class="fas fa-trash-alt" style="left: 40%; animation-delay: 3s; font-size: 20px;"></i>
-        <i class="fas fa-leaf" style="left: 70%; animation-delay: 6s;"></i>
-        <i class="fas fa-box" style="left: 85%; animation-delay: 1s; font-size: 25px;"></i>
-    </div>
-
     <div class="container">
         <div class="logo">♻️</div>
-        <h2>Welcome Back</h2>
-        <p class="subtitle">Access your Scrap Treasure account.</p>
+        <h2>Scrap Treasure</h2>
+        <p class="subtitle">Turn your waste into wealth today.</p>
+
+        <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input id="name" type="text" placeholder="Full Name">
+        </div>
 
         <div class="input-wrapper">
             <i class="fas fa-envelope"></i>
-            <input type="email" id="email" placeholder="Email Address">
+            <input id="email" type="email" placeholder="Email Address">
         </div>
 
         <div class="input-wrapper">
             <i class="fas fa-lock"></i>
-            <input type="password" id="password" placeholder="Password">
+            <input id="password" type="password" placeholder="Password">
         </div>
 
-        <button class="btn-grad" onclick="login()">
-            Sign In
+        <div class="input-wrapper">
+            <i class="fas fa-users"></i>
+            <select id="role">
+                <option value="" disabled selected>Join as...</option>
+                <option value="CLIENT">Client (I sell scrap)</option>
+                <option value="COLLECTOR">Collector (I pick up)</option>
+            </select>
+        </div>
+
+        <button class="btn-grad" onclick="register()">
+            Create Account
         </button>
 
-        <p id="error"></p>
-
         <p class="footer-text">
-            New here? <a href="register.html">Create Account</a>
+            Already a member? <a href="login.html">Sign In</a>
         </p>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
+    <script>
+        function register() {
+            const data = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value,
+                role: document.getElementById("role").value
+            };
+
+            if (!data.name || !data.email || !data.password || !data.role) {
+                alert("Please fill all fields");
+                return;
+            }
+
+            fetch("http://localhost:8080/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.text())
+            .then(text => {
+                console.log("Response:", text);
+                alert(text);
+                window.location.href = "login.html";
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Registration failed");
+            });
+        }
+    </script>
 
 </body>
 </html>

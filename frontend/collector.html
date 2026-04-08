@@ -1,22 +1,264 @@
-<h2>Collector Dashboard</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collector Dashboard - Scrap Treasure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00b894;
+            --secondary: #00cec9;
+            --dark: #2d3436;
+            --glass: rgba(255, 255, 255, 0.95);
+            --danger: #ff7675;
+            --sidebar-width: 280px;
+        }
 
-<button onclick="logout()">Logout</button>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<hr>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            background-attachment: fixed;
+            display: flex;
+            min-height: 100vh;
+            color: var(--dark);
+        }
 
-<h3>Available Requests</h3>
-<div id="requestList"></div>
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 25px;
+            z-index: 1000;
+        }
 
-<script src="js/api.js"></script>
-<script src="js/collector.js"></script>
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            color: var(--primary);
+        }
 
-<script>
-function logout(){
-    localStorage.clear();
-    window.location.href = "login.html";
-}
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            border-radius: 15px;
+            background: rgba(0, 184, 148, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
 
-window.onload = function () {
-    loadAvailableRequests();
-};
-</script>
+        /* --- MAIN CONTAINER --- */
+        .main-container {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            padding: 20px 45px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover { background: #d63031; transform: translateY(-2px); }
+
+        /* --- CONTENT BODY --- */
+        .content {
+            padding: 40px 45px;
+            max-width: 1200px;
+        }
+
+        .page-header h2 { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+        .page-header p { color: #636e72; margin-bottom: 40px; }
+
+        /* --- THE DYNAMIC LIST (FORCE STYLING STARTS HERE) --- */
+        #requestList {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Target whatever container your JS is creating (likely a div) */
+        #requestList > div {
+            background: white !important;
+            padding: 30px !important;
+            border-radius: 20px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
+            border-left: 6px solid var(--primary) !important;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* FORCE STYLE FOR THE INPUT (Skeleton Fix) */
+        #requestList input {
+            width: 100% !important;
+            max-width: 400px;
+            padding: 12px 18px !important;
+            margin: 10px 0 !important;
+            border: 2px solid #e0e0e0 !important;
+            border-radius: 10px !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-size: 15px !important;
+            outline: none !important;
+            background: #f9f9f9 !important;
+            transition: all 0.3s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        #requestList input:focus {
+            border-color: var(--primary) !important;
+            background: white !important;
+            box-shadow: 0 0 10px rgba(0, 184, 148, 0.1) !important;
+        }
+
+        /* FORCE STYLE FOR THE BUTTON (Skeleton Fix) */
+        #requestList button {
+            width: fit-content !important;
+            min-width: 200px;
+            padding: 12px 25px !important;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-weight: 600 !important;
+            font-family: 'Poppins', sans-serif !important;
+            cursor: pointer !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            transition: 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.2) !important;
+        }
+
+        #requestList button:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4) !important;
+            filter: brightness(1.1);
+        }
+
+        /* Styling for the labels inside the card */
+        #requestList b {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { width: 80px; padding: 40px 10px; }
+            .logo-box span, .nav-item span { display: none; }
+            .main-container { margin-left: 80px; width: calc(100% - 80px); }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-box">
+            <i class="fas fa-truck-loading"></i>
+            <span>Scrap Treasure</span>
+        </div>
+        <nav>
+            <a href="#" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span>Pickup Feed</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-container">
+        <header class="top-bar">
+            <div style="font-weight: 600;">
+                Welcome, Collector <span style="color: var(--primary); margin-left:10px;">● Online</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-power-off"></i> Logout
+            </button>
+        </header>
+
+        <section class="content">
+            <div class="page-header">
+                <h2>Available Requests</h2>
+                <p>Manage your assigned pickups and update weights below.</p>
+            </div>
+
+            <div id="requestList">
+                </div>
+        </section>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/collector.js"></script>
+
+    <script>
+        function logout(){
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        window.onload = function () {
+            if(typeof loadAvailableRequests === "function") {
+                loadAvailableRequests();
+            }
+        };
+    </script>
+
+    <div id="toast" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #323232;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 999;
+"></div>
+</body>
+</html>

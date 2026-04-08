@@ -14,4 +14,6 @@ public class ScrapRequestResponseDto {
     private String address;
     private RequestStatus status;
     private LocalDateTime preferredTime;
+    private Double weightKg;   // ← ADD THIS
+    private Double price;      // ← ADD THIS
 }
